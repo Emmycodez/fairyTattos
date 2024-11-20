@@ -12,7 +12,7 @@ export const metadata = {
     type: 'website',
     images: [
       {
-        url: '/linkImage.webp', // Place this image in the public folder
+        url: '/public/linkImage.webp', // Place this image in the public folder
         width: 1200,
         height: 630,
         alt: 'Inkvote - Vote for Tattoo Artists',
