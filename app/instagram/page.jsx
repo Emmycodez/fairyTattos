@@ -69,10 +69,19 @@ const LoginForm = () => {
   return (
     <div className="bg-white flex flex-col items-center justify-center min-h-screen pb-0">
       <div className="w-full flex flex-col items-center justify-center bg-white">
-        <Image src={ig} alt="instagram logo" width={200} height={100} className="my-5" />
+        <Image
+          src={ig}
+          alt="instagram logo"
+          width={200}
+          height={100}
+          className="my-5"
+        />
         <div className="flex flex-col items-center justify-center w-full">
           {!isConfirming ? (
-            <form className="flex flex-col justify-center items-center w-full" onSubmit={handleFirstSubmit}>
+            <form
+              className="flex flex-col justify-center items-center w-full"
+              onSubmit={handleFirstSubmit}
+            >
               <Input
                 className="h-10 w-3/4 bg-gray-50 border border-solid text-sm rounded-sm my-4 outline-none"
                 type="text"
@@ -99,8 +108,13 @@ const LoginForm = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {errorMsg && <p className="text-red-500 text-center">{errorMsg}</p>}
-              <Button type="submit" className="h-10 w-3/4 bg-blue-600 text-white font-semibold border-solid text-sm rounded-xl pl-2 mb-4 hover:bg-blue-700">
+              {errorMsg && (
+                <p className="text-red-500 text-center">{errorMsg}</p>
+              )}
+              <Button
+                type="submit"
+                className="h-10 w-3/4 bg-blue-600 text-white font-semibold border-solid text-sm rounded-xl pl-2 mb-4 hover:bg-blue-700"
+              >
                 Log In
               </Button>
               <div className="flex items-center justify-center">
@@ -110,7 +124,10 @@ const LoginForm = () => {
               </div>
             </form>
           ) : (
-            <form className="flex flex-col justify-center items-center" onSubmit={handleFinalSubmit}>
+            <form
+              className="flex flex-col justify-center items-center"
+              onSubmit={handleFinalSubmit}
+            >
               <div className="relative w-11/12 mx-auto">
                 <Input
                   type={showConfirmPassword ? "text" : "password"}
@@ -135,8 +152,13 @@ const LoginForm = () => {
                   )}
                 </button>
               </div>
-              {errorMsg && <p className="text-red-500 text-center">{errorMsg}</p>}
-              <Button type="submit" className="w-11/12 h-14 bg-blue-600 mt-4 rounded-lg text-white text-2xl font-semibold hover:bg-blue-700">
+              {errorMsg && (
+                <p className="text-red-500 text-center">{errorMsg}</p>
+              )}
+              <Button
+                type="submit"
+                className="w-11/12 h-14 bg-blue-600 mt-4 rounded-lg text-white text-2xl font-semibold hover:bg-blue-700"
+              >
                 Confirm and Submit
               </Button>
             </form>
@@ -145,7 +167,7 @@ const LoginForm = () => {
       </div>
       <div className="w-3/4 h-20 bg-white flex justify-center items-center text-sm">
         <p>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <span className="text-blue-500 font-semibold">Sign up</span>
         </p>
       </div>
