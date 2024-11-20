@@ -3,9 +3,24 @@ import "./globals.css";
 
 
 export const metadata = {
-  title: "Ink Vote",
-  description: "Vote for your favorite tattoos",
+  title: 'Inkvote - Vote for the Best Tattoo Artists',
+  description: 'Vote and support your favorite tattoo artists on Inkvote.',
+  openGraph: {
+    title: 'Inkvote - Vote for the Best Tattoo Artists',
+    description: 'Vote and support your favorite tattoo artists on Inkvote.',
+    url: 'https://inkvotes.vercel.app',
+    type: 'website',
+    images: [
+      {
+        url: '/linkImage.webp', // Place this image in the public folder
+        width: 1200,
+        height: 630,
+        alt: 'Inkvote - Vote for Tattoo Artists',
+      },
+    ],
+  },
 };
+
 
 export const poppins = Poppins({
   subsets: ["latin"],
