@@ -147,6 +147,8 @@ export default function ContentManager() {
                     src={`/uploads/${item.image}`}
                     alt={item.name}
                     className="w-16 h-16 object-cover rounded"
+                    width={150}
+                    height={150}
                   />
                 </TableCell>
                 <TableCell>
