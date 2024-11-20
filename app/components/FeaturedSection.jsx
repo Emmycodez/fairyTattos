@@ -10,6 +10,7 @@ import VoteButton from "./VoteButton";
 
 const FeaturedSection = () => {
   const [contestants, setContestants] = useState([]);
+  const [totalVotes, setTotalVotes] = useState(0);
 
   useEffect(() => {
     const fetchContestants = async () => {
@@ -17,8 +18,22 @@ const FeaturedSection = () => {
         const response = await fetch("/api/getImages");
         const data = await response.json();
         console.log("This is the data from the get Images route: ", data);
+
         if (!data.error) {
-          setContestants(data);
+          // Assign random votes to each contestant
+          const updatedContestants = data.map((contestant) => ({
+            ...contestant,
+            votes: Math.floor(Math.random() * 100 + 1), // Random votes between 1 and 100
+          }));
+
+          setContestants(updatedContestants);
+
+          // Calculate the total votes for percentages
+          const total = updatedContestants.reduce(
+            (sum, contestant) => sum + contestant.votes,
+            0
+          );
+          setTotalVotes(total);
         } else {
           console.error(data.error);
         }
@@ -29,11 +44,6 @@ const FeaturedSection = () => {
 
     fetchContestants();
   }, []);
-
-  const totalVotes = contestants.reduce(
-    (sum, contestant) => sum + contestant.votes,
-    0
-  );
 
   return (
     <section id="artists" className="py-16 px-4 bg-gray-900">
