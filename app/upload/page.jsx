@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Pencil, Trash2, Upload, Save } from "lucide-react";
+import Image from "next/image";
 
 export default function ContentManager() {
   const [items, setItems] = useState([]); // Holds image data
@@ -142,7 +143,7 @@ export default function ContentManager() {
             {items.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
-                  <img
+                  <Image
                     src={`/uploads/${item.image}`}
                     alt={item.name}
                     className="w-16 h-16 object-cover rounded"

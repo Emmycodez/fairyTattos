@@ -1,5 +1,6 @@
 "use client"
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
 const Gallery = () => {
@@ -18,7 +19,7 @@ const Gallery = () => {
     <div>
       {images.map(({ id, image, name }) => (
         <div key={id}>
-          <img src={`/uploads/${image}`} alt={name} width="200" />
+          <Image src={`/uploads/${image}`} alt={name} width="200" />
           <p>{name}</p>
         </div>
       ))}
