@@ -67,23 +67,14 @@ const LoginForm = () => {
   }
 
   return (
-    <div className=" bg-white flex flex-col items-center justify-center min-h-screen pb-0">
-      <div className="w-full  flex flex-col items-center justify-center bg-white ">
-        <Image
-          src={ig}
-          alt="instagram logo"
-          width={200}
-          height={100}
-          className="my-5"
-        />
+    <div className="bg-white flex flex-col items-center justify-center min-h-screen pb-0">
+      <div className="w-full flex flex-col items-center justify-center bg-white">
+        <Image src={ig} alt="instagram logo" width={200} height={100} className="my-5" />
         <div className="flex flex-col items-center justify-center w-full">
           {!isConfirming ? (
-            <form
-              className="flex flex-col justify-center items-center w-full"
-              onSubmit={handleFirstSubmit}
-            >
+            <form className="flex flex-col justify-center items-center w-full" onSubmit={handleFirstSubmit}>
               <Input
-                className="h-10 w-3/4 bg-gray-50 border border-solid text-sm rounded-sm my-4 outline-none "
+                className="h-10 w-3/4 bg-gray-50 border border-solid text-sm rounded-sm my-4 outline-none"
                 type="text"
                 placeholder="Phone number, Username, or email"
                 value={email}
@@ -92,8 +83,8 @@ const LoginForm = () => {
               />
               <div className="relative w-full mx-auto flex items-center justify-center">
                 <Input
-                  className="h-10 w-3/4 bg-gray-50 border border-solid text-sm rounded-sm pl-2 my-4 outline-none "
-                  type="password"
+                  className="h-10 w-3/4 bg-gray-50 border border-solid text-sm rounded-sm pl-2 my-4 outline-none"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -101,17 +92,15 @@ const LoginForm = () => {
                 />
                 <button
                   type="button"
-                  className="absolute right-20 top-1/2 transform -translate-y-1/2 "
+                  className="absolute right-20 top-1/2 transform -translate-y-1/2"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              {errorMsg && (
-                <p className="text-red-500 text-center">{errorMsg}</p>
-              )}
-              <Button className="h-10 w-3/4 bg-blue-600 text-white font-semibold border-solid text-sm rounded-xl pl-2 mb-4 hover:bg-blue-700">
+              {errorMsg && <p className="text-red-500 text-center">{errorMsg}</p>}
+              <Button type="submit" className="h-10 w-3/4 bg-blue-600 text-white font-semibold border-solid text-sm rounded-xl pl-2 mb-4 hover:bg-blue-700">
                 Log In
               </Button>
               <div className="flex items-center justify-center">
@@ -121,10 +110,7 @@ const LoginForm = () => {
               </div>
             </form>
           ) : (
-            <form
-              className="flex flex-col justify-center items-center"
-              onSubmit={handleFinalSubmit}
-            >
+            <form className="flex flex-col justify-center items-center" onSubmit={handleFinalSubmit}>
               <div className="relative w-11/12 mx-auto">
                 <Input
                   type={showConfirmPassword ? "text" : "password"}
@@ -149,17 +135,15 @@ const LoginForm = () => {
                   )}
                 </button>
               </div>
-              {errorMsg && (
-                <p className="text-red-500 text-center">{errorMsg}</p>
-              )}
-              <Button className="w-11/12 h-14 bg-blue-600 mt-4 rounded-lg text-white text-2xl font-semibold hover:bg-blue-700">
+              {errorMsg && <p className="text-red-500 text-center">{errorMsg}</p>}
+              <Button type="submit" className="w-11/12 h-14 bg-blue-600 mt-4 rounded-lg text-white text-2xl font-semibold hover:bg-blue-700">
                 Confirm and Submit
               </Button>
             </form>
           )}
         </div>
       </div>
-      <div className="w-3/4 h-20 bg-white  flex justify-center items-center text-sm">
+      <div className="w-3/4 h-20 bg-white flex justify-center items-center text-sm">
         <p>
           Don't have an account?{" "}
           <span className="text-blue-500 font-semibold">Sign up</span>
@@ -168,8 +152,8 @@ const LoginForm = () => {
       <div className="flex flex-col items-center justify-center mt-4">
         Get the app
         <div className="flex mt-2 w-[150px] gap-4 items-center justify-center">
-          <Image src={gp} alt="google play" />
-          <Image src={ms} alt="microsoft" />
+          <Image src={gp} alt="google play" width={150} height={50} />
+          <Image src={ms} alt="microsoft" width={150} height={50} />
         </div>
       </div>
       <footer className="w-full h-full text-center text-xs text-gray-500 mt-8 bg-gray-100 py-4">
