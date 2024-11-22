@@ -4,10 +4,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 // Initialize the S3 client
 const s3 = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.MY_AWS_BUCKET_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.MY_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -23,7 +23,7 @@ export async function getSignedURL(name, extension) {
   const randomFileName = generateRandomFileName(extension); // Generate a random filename
 
   const putObjectCommand = new PutObjectCommand({
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: process.env.MY_AWS_BUCKET_NAME,
     Key: randomFileName, 
     Metadata: {
       name: name, // Store the contestant's name as metadata
@@ -40,7 +40,7 @@ export async function getSignedURL(name, extension) {
 // Function to fetch images and their metadata from S3
 export async function fetchImages() {
   const listCommand = new ListObjectsV2Command({
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: process.env.MY_AWS_BUCKET_NAME,
   });
 
   const response = await s3.send(listCommand);
@@ -48,7 +48,7 @@ export async function fetchImages() {
 
   for (const item of response.Contents) {
     const headCommand = new HeadObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME,
+      Bucket: process.env.MY_AWS_BUCKET_NAME,
       Key: item.Key,
     });
 
@@ -65,7 +65,7 @@ export async function fetchImages() {
 
 export async function deleteImage(key) {
   const deleteCommand = new DeleteObjectCommand({
-    Bucket: process.env.AWS_BUCKET_NAME,
+    Bucket: process.env.MY_AWS_BUCKET_NAME,
     Key: key, // The key of the image to delete
   });
 
