@@ -75,7 +75,7 @@ const FeaturedSection = () => {
                 </h3>
                 <Progress
                   value={votePercentage}
-                  className="h-2 mb-4 bg-teal-500"
+                  className="h-2 mb-4"
                  
                 />
                 <div className="flex items-center justify-between text-gray-300">
