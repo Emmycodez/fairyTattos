@@ -63,7 +63,7 @@ const FeaturedSection = () => {
                   alt={`${contestant.name}'s image`}
                   fill
                   style={{ objectFit: "cover" }}
-                  className="transition-transform duration-300 hover:scale-105"
+                  className="transition-transform duration-300 hover:scale-105 h-[300px] w-[300px]"
                 />
                 <Badge className="absolute top-4 right-4 bg-teal-500 text-white p-3 text-md">
                   {votePercentage}%
