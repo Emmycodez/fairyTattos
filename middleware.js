@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 export async function middleware(req) {
   // Get real client IP from the X-Forwarded-For header
   const ip = req.headers.get("X-Forwarded-For") || req.ip;
+  console.log("Request headers: ", req.headers);
 
   if (!ip) {
     console.error("No IP address found");
