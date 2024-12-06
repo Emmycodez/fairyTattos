@@ -84,17 +84,23 @@ export async function deleteImage(key) {
   }
 }
 
-export async function getLocation() {
+// actions/queries.js
+export async function getLocation(ip = null) {
   try {
-    const data = await fetch("https://ipinfo.io/json?token=8519dfa47133bf", {
-      cache: "no-cache",
-    });
+    // Use provided IP or get the IP from the request (if available)
+    const locationEndpoint = ip
+      ? `https://ipinfo.io/${ip}/json?token=8519dfa47133bf`
+      : `https://ipinfo.io/json?token=8519dfa47133bf`;
+      
+    const data = await fetch(locationEndpoint, { cache: "no-cache" });
     const locationData = await data.json();
     return locationData;
   } catch (error) {
     console.error("Error getting location:", error);
+    return null;
   }
 }
+
 
 export async function getCountryInfo() {
   try {
