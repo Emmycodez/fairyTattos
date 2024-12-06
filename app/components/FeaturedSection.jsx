@@ -17,7 +17,7 @@ const FeaturedSection = () => {
     const getContestants = async () => {
       try {
         const s3data = await fetchImages();
-        console.log("Fetched images data: ", s3data);
+       
 
         const updatedContestants = s3data.map((contestant) => ({
           ...contestant,

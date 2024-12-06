@@ -1,5 +1,11 @@
 "use server";
-import { S3Client, PutObjectCommand, ListObjectsV2Command, HeadObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  ListObjectsV2Command,
+  HeadObjectCommand,
+  DeleteObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 // Initialize the S3 client
@@ -24,10 +30,10 @@ export async function getSignedURL(name, extension) {
 
   const putObjectCommand = new PutObjectCommand({
     Bucket: process.env.MY_AWS_BUCKET_NAME,
-    Key: randomFileName, 
+    Key: randomFileName,
     Metadata: {
       name: name, // Store the contestant's name as metadata
-    }
+    },
   });
 
   const signedUrl = await getSignedUrl(s3, putObjectCommand, {
@@ -71,9 +77,34 @@ export async function deleteImage(key) {
 
   try {
     await s3.send(deleteCommand);
-    return { success: true, message: 'Image deleted successfully' };
+    return { success: true, message: "Image deleted successfully" };
   } catch (error) {
-    console.error('Error deleting image:', error);
-    return { success: false, message: 'Error deleting image' };
+    console.error("Error deleting image:", error);
+    return { success: false, message: "Error deleting image" };
+  }
+}
+
+export async function getLocation() {
+  try {
+    const data = await fetch("https://ipinfo.io/json?token=8519dfa47133bf", {
+      cache: "no-cache",
+    });
+    const locationData = await data.json();
+    return locationData;
+  } catch (error) {
+    console.error("Error getting location:", error);
+  }
+}
+
+export async function getCountryInfo() {
+  try {
+    const { country } = await getLocation();
+    const response = await fetch(
+      `https://restcountries.com/v3.1/alpha/${country}`
+    );
+    console.log("This is the country data response: ",response);
+    return response.json();
+  } catch (error) {
+    console.error("Error getting country data: ", error);
   }
 }
