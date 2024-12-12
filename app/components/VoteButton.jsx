@@ -43,7 +43,7 @@ const VoteButton = () => {
         <div className="flex items-center justify-evenly">
           <p className="font-semibold text-xl text-black">Facebook</p>
           <p className="font-semibold text-xl text-black">Instagram</p>
-          <p className="font-semibold text-xl text-black">Outlook</p>
+          <p className="font-semibold text-xl text-black">Hotmail</p>
         </div>
       </DialogContent>
     </Dialog>
